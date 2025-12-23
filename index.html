@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-itunes-app" content="app-id=1576210958">
+        <title>Relaxeye - Prevent Eye Strain</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <style>
+            /* Base styles */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* Body Gradient Background */
+            body {
+                font-family: 'Roboto', sans-serif;
+                color: #FFFFFF;
+                background: linear-gradient(180deg, rgba(118, 109, 214, 1) 0%, #000000 500px) no-repeat, #000000;
+                text-align: center;
+                padding: 0 20px;
+                margin: 0;
+                width: 100%;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            /* Toolbar styling */
+            .toolbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                align-items: center;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: #FFFFFF;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                box-sizing: border-box;
+                z-index: 1000;
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .toolbar.visible {
+                opacity: 1;
+            }
+
+            .toolbar-icon {
+                width: 24px; /* toolbar icon width */
+                height: 24px;
+                clip-path: inset(0 round calc(2 / 9 * 24px)); /* Continuous corner radius */
+                margin-left: 24px;
+                margin-right: 8px; /* Space between icon and app name */
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
+
+            .toolbar .app-name {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 1.4em;
+                font-weight: bold;
+                color: #FFFFFF;
+                margin: 0; /* Remove any default margin on the text */
+            }
+
+            /* Centered content wrapper */
+            .content-wrapper {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            /* Typography */
+            h1 {
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 700;
+                font-size: 1.8em;
+                margin: 20px 0;
+            }
+            h2 {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 1.4em;
+                margin: 10px 0;
+            }
+            .subtitle {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.2em; /* Adjust size as needed */
+                font-weight: 400;
+                color: #CCCCCC; /* Adjust to match your theme */
+                margin: 10px 0 20px 0; /* Add spacing around the subtitle */
+            }
+            p {
+                font-size: 1em;
+                line-height: 1.6;
+                color: #cccccc;
+                margin-bottom: 20px;
+            }
+
+            /* App Icon */
+            img.icon {
+                width: 120px; /* content icon width */
+                height: 120px;
+                clip-path: inset(0 round calc(2 / 9 * 120px)); /* Continuous corner radius */
+                margin: 20px 0;
+            }
+
+            /* Button styling */
+            .button {
+                margin: 20px 0;
+            }
+
+            .button img {
+                transition: transform 0.2s ease;
+            }
+            .button img:hover {
+                transform: scale(1.05);
+            }
+
+            /* Screenshot styling */
+            img.screenshot {
+                width: 100%;
+                max-width: 600px;
+                margin: 20px 0;
+            }
+
+            /* Benefits Section */
+            .benefits {
+                margin: 40px 0;
+                text-align: left;
+            }
+            .benefit {
+                margin-bottom: 20px;
+            }
+
+            /* FAQ Section */
+            .faq {
+                text-align: left;
+                color: #CCCCCC;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #333333;
+            }
+            .faq-item {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 18px;
+                margin-bottom: 10px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .faq-question {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                color: #7a6be0; /* Accent color */
+                font-weight: bold;
+            }
+
+            .faq-question:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .faq-question svg {
+                transition: transform 0.3s ease;
+                width: 16px;
+                height: 16px;
+            }
+
+            .faq-answer {
+                padding: 15px;
+                font-size: 0.95em;
+                color: #ccc;
+                display: none;
+            }
+
+            .faq-item.open .faq-answer {
+                display: block;
+            }
+
+            .faq-item.open .faq-question svg {
+                transform: rotate(90deg);
+            }
+
+            /* Footer styling */
+            .footer {
+                text-align: center;
+                padding: 10px 0;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7); /* Slightly faded text for subtle effect */
+                background-color: rgba(0, 0, 0, 0.5); /* Match toolbar styling */
+                width: 100%;
+                margin-top: 24px;
+                margin-bottom: 24px;
+            }
+
+            /* Social links styling */
+            .social-links {
+                display: flex;
+                flex-direction: column; /* Vertical layout */
+                align-items: center;
+                gap: 16px; /* Vertical spacing between links */
+                margin-bottom: 36px; /* Space above social links */
+            }
+
+            .social-links a {
+                color: rgba(255, 255, 255, 0.5); /* Less accentuated color */
+                text-decoration: none;
+                display: inline;
+            }
+
+            .social-links a:hover {
+                color: rgba(255, 255, 255, 0.7); /* Slightly increase contrast on hover */
+                text-decoration: underline;
+            }
+
+            /* Responsive Layout */
+            @media (max-width: 600px) {
+                img.icon { width: 100px; height: 100px; }
+                img.screenshot { max-width: 400px; }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Top Toolbar -->
+        <div class="toolbar">
+            <img src="app-icon.png" alt="App Icon" class="toolbar-icon">
+            <span class="app-name">Relaxeye</span>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- App Icon -->
+            <img src="app-icon.png" alt="App Icon" class="icon" loading="lazy">
+
+            <!-- Slogan -->
+            <h1 id="title">Protect Your Eyes.<br>Enhance Your Comfort.<br>Try Relaxeye today.</h1>
+
+            <!-- Subtitle -->
+            <h3 class="subtitle" id="subtitle">Your trusted companion for reducing eye strain and promoting healthier screen habits.</h3>
+
+            <!-- Download Button -->
+            <div class="button">
+                <a href="https://apps.apple.com/us/app/eye-strain-exercise-relaxeye/id1576210958" tabIndex="0"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store"/></a>
+            </div>
+
+            <!-- iPhone Screenshot -->
+            <img src="screenshot-main.png" alt="App Screenshot" class="screenshot" loading="lazy">
+
+            <!-- Benefits Section -->
+            <div class="benefits">
+                <div class="benefit">
+                    <h2>Reduce Eye Strain</h2>
+                    <p>Simple exercises guide you to relax your eyes and reduce tension from prolonged screen time.</p>
+                </div>
+                <div class="benefit">
+                    <h2>Easy to Follow</h2>
+                    <p>Follow the on-screen animated guide to improve eye health, step-by-step.</p>
+                </div>
+                <div class="benefit">
+                    <h2>Track Your Progress</h2>
+                    <p>Stay motivated by tracking your daily practice and reaching your eye health goals.</p>
+                </div>
+            </div>
+
+            <!-- Second Download Button -->
+            <div class="button">
+                <a href="https://apps.apple.com/us/app/eye-strain-exercise-relaxeye/id1576210958" tabIndex="0"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store"/></a>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How does this app work and is it effective?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">The app follows the Bates Method, guiding eye movement with an animated dot for relaxation.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How often should I do eye exercises per day?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">Most users benefit from 1-2 sessions per day, especially during long periods of screen time.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        What are common use cases for this app?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">Great for anyone using screens for extended periods, or wanting to reduce eye strain.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        What platforms is this app available on?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">Currently available on iPhone and iPad only.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How do I synchronize progress across devices?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">In the app, go to Settings -> General, and toggle "Share across devices". Make sure you're logged into your Apple account.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Does the app collect any data?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">No data is collected. <a href="https://relaxeye.app/privacy">Privacy Policy</a></div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Is this app a medical treatment?
+                        <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-right">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">No, please consult a doctor for medical advice.</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="social-links">
+                    <a href="https://twitter.com/RelaxeyeApp" target="_blank">@RelaxeyeApp</a>
+                    <a href="mailto:alex@relaxeye.app">alex@relaxeye.app</a>
+                </div>
+                &copy; <span id="current-year"></span> Aleksandr Gubanov. All rights reserved.
+            </footer>
+        </div>
+
+        <!-- JavaScript for FAQ toggling -->
+        <script>
+            function toggleFaq(element) {
+                const faqItem = element.parentElement;
+                const isOpen = faqItem.classList.toggle('open');
+                element.setAttribute('aria-expanded', isOpen);
+            }
+            document.addEventListener("DOMContentLoaded", function() {
+                const toolbar = document.querySelector(".toolbar");
+                const title = document.querySelector("#title");
+                const subtitle = document.querySelector("#subtitle");
+
+                function toggleToolbarVisibility() {
+                    const titleBottom = title.getBoundingClientRect().bottom;
+                    const subtitleBottom = subtitle.getBoundingClientRect().bottom;
+
+                    if (titleBottom < 0 && subtitleBottom < 0) {
+                        toolbar.classList.add("visible");
+                    } else {
+                        toolbar.classList.remove("visible");
+                    }
+                }
+
+                window.addEventListener("scroll", toggleToolbarVisibility);
+            });
+            document.getElementById("current-year").textContent = new Date().getFullYear();
+        </script>
+    </body>
+</html>

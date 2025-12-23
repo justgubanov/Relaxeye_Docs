@@ -4,6 +4,7 @@
             {
                 "appID": "3TZTCAQPPM.app.Relaxeye",
                 "paths": [
+                    "/",
                     "/demo/"
                 ],
                 "appIDs": [
